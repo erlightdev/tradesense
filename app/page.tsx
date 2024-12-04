@@ -106,6 +106,7 @@ export default function Home() {
             <div className="md:col-span-1 space-y-6">
               {performanceCards.map((card, index) => (
                 <MarketPerformanceCard 
+                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                   key={index}
                   title={card.title}
                   value={card.value}

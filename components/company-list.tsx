@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { CompanySearch } from "./company-search"
 import companiesData from '@/content/companies/companies.json'
+import { Badge } from "@/components/ui/badge"
 
 const ITEMS_PER_PAGE = 10
 
@@ -72,42 +73,67 @@ export function CompanyList() {
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
   return (
-    <div className="w-full">
+    <div className="w-full space-y-4 bg-background p-4 rounded-lg shadow-sm">
       <CompanySearch />
       
       {isLoading ? (
-        <div className="text-center py-4">Loading companies...</div>
+        <div className="text-center py-4 text-muted-foreground dark:text-accent">
+          Loading companies...
+        </div>
       ) : (
         <>
-          <Table>
-            <TableHeader>
+          <Table className="border rounded-lg overflow-hidden">
+            <TableHeader className="bg-muted/50 dark:bg-white dark:bg-opacity-10">
               <TableRow>
-                <TableHead>S.N.</TableHead>
-                <TableHead>Symbol</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Sector</TableHead>
-                <TableHead>Last Updated</TableHead>
+                <TableHead className="w-[50px] text-muted-foreground dark:text-accent">S.N.</TableHead>
+                <TableHead className="text-muted-foreground dark:text-accent">Symbol</TableHead>
+                <TableHead className="text-muted-foreground dark:text-accent">Name</TableHead>
+                <TableHead className="text-muted-foreground dark:text-accent">Status</TableHead>
+                <TableHead className="text-muted-foreground dark:text-accent">Sector</TableHead>
+                <TableHead className="text-muted-foreground dark:text-accent">Last Updated</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {companies.map((company) => (
-                <TableRow key={`${company.symbol}-${company.serialNumber}`}>
-                  <TableCell>{company.serialNumber}</TableCell>
-                  <TableCell>{company.symbol}</TableCell>
-                  <TableCell>{company.name}</TableCell>
-                  <TableCell>{company.status}</TableCell>
-                  <TableCell>{company.sector}</TableCell>
-                  <TableCell>{new Date(company.lastUpdated).toLocaleString()}</TableCell>
+                <TableRow 
+                  key={`${company.symbol}-${company.serialNumber}`} 
+                  className="hover:bg-opacity-20 transition-colors"
+                >
+                  <TableCell className="font-medium text-muted-foreground dark:text-accent">
+                    {company.serialNumber}
+                  </TableCell>
+                  <TableCell className="font-semibold text-primary dark:text-accent">
+                    {company.symbol}
+                  </TableCell>
+                  <TableCell className="dark:text-accent">{company.name}</TableCell>
+                  <TableCell className="dark:text-accent">
+                    <Badge 
+                      variant={company.status === 'Active' ? 'default' : 'destructive'}
+                      className="capitalize"
+                    >
+                      {company.status.toLowerCase()}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground dark:text-accent">
+                    {company.sector}
+                  </TableCell>
+                  <TableCell className="text-xs text-muted-foreground dark:text-accent">
+                    {new Date(company.lastUpdated).toLocaleString('en-US', {
+                      month: 'short', 
+                      day: 'numeric', 
+                      year: 'numeric'
+                    })}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
 
           {/* Pagination Controls */}
-          <div className="flex justify-between items-center mt-4">
+          <div className="flex justify-between items-center mt-4 bg-muted/50 dark:bg-white dark:bg-opacity-10 p-3 rounded-lg">
             <Button 
               variant="outline" 
+              size="sm"
               disabled={currentPage === 1}
               onClick={() => window.history.pushState(
                 null, 
@@ -115,13 +141,19 @@ export function CompanyList() {
                 `?page=${currentPage - 1}${searchTerm ? `&search=${searchTerm}` : ''}`
               )}
             >
-              <ChevronLeft className="mr-2" /> Previous
+              <ChevronLeft className="mr-2 h-4 w-4" /> Previous
             </Button>
 
-            <span>Page {currentPage} of {totalPages}</span>
+            <span className="text-sm text-muted-foreground">
+              Page {currentPage} of {totalPages}
+              <span className="ml-2 text-xs">
+                ({totalItems} companies)
+              </span>
+            </span>
 
             <Button 
               variant="outline" 
+              size="sm"
               disabled={currentPage >= totalPages}
               onClick={() => window.history.pushState(
                 null, 
@@ -129,7 +161,7 @@ export function CompanyList() {
                 `?page=${currentPage + 1}${searchTerm ? `&search=${searchTerm}` : ''}`
               )}
             >
-              Next <ChevronRight className="ml-2" />
+              Next <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
         </>
