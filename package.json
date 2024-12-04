@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "scrape": "node scripts/scrape-companies.js"
+    "scrape": "node scripts/scrape-companies.js",
+    "scrape:once": "node -e \"require('./scripts/scrape-companies.js').scrapeCompanies()\""
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -69,6 +70,7 @@
     "typescript": "5.2.2",
     "use-debounce": "^10.0.4",
     "vaul": "^1.1.1",
+    "winston": "^3.17.0",
     "zod": "^3.23.8"
   }
 }

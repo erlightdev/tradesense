@@ -1,12 +1,49 @@
 const playwright = require('playwright');
 const fs = require('fs').promises;
 const path = require('path');
+const { createLogger, format, transports } = require('winston');
+
+// Set up logging
+const logger = createLogger({
+  level: 'info',
+  format: format.combine(
+    format.timestamp(),
+    format.errors({ stack: true }),
+    format.splat(),
+    format.json()
+  ),
+  transports: [
+    new transports.File({ filename: 'error.log', level: 'error' }),
+    new transports.File({ filename: 'combined.log' }),
+    new transports.Console({
+      format: format.simple()
+    })
+  ]
+});
+
+function validateCompanyData(companies) {
+  if (!Array.isArray(companies) || companies.length === 0) {
+    throw new Error('No companies data found');
+  }
+
+  const requiredFields = ['symbol', 'name', 'sector', 'lastTradedPrice', 'percentChange'];
+  
+  companies.forEach((company, index) => {
+    requiredFields.forEach(field => {
+      if (!company[field]) {
+        logger.warn(`Missing ${field} for company at index ${index}`);
+      }
+    });
+  });
+
+  return companies;
+}
 
 async function scrapeCompanies() {
   let browser = null;
   try {
     browser = await playwright.chromium.launch({ 
-      headless: false, // Keep browser visible for debugging
+      headless: true, // Changed to true for production
       args: [
         '--disable-web-security',
         '--disable-features=IsolateOrigins,site-per-process',
@@ -30,43 +67,29 @@ async function scrapeCompanies() {
     
     const page = await context.newPage();
 
-    // Add console logging in the page context
-    page.on('console', (msg) => console.log('Page log:', msg.text()));
+    // Logging page events
+    page.on('console', (msg) => logger.info('Page log:', msg.text()));
+    page.on('pageerror', (err) => logger.error('Page error:', err));
 
-    // Extensive error logging and debugging
-    page.on('pageerror', (err) => {
-      console.error('Page error:', err);
-    });
-
-    // Increase timeout and add more robust waiting
-    await page.setDefaultTimeout(90000); // Increased to 90 seconds
+    await page.setDefaultTimeout(90000);
     
     try {
-      // Navigate to the page with extensive logging
-      console.log('Navigating to the website...');
+      logger.info('Navigating to the website...');
       const response = await page.goto('https://www.nepalstock.com.np/company', { 
         waitUntil: 'networkidle',
         timeout: 90000
       });
 
-      // Log response details
-      console.log('Response status:', response ? response.status() : 'No response');
+      logger.info('Response status:', response ? response.status() : 'No response');
       
-      // Take a screenshot for debugging
-      await page.screenshot({ path: 'debug-screenshot.png' });
-
-      // Check page content
-      const pageContent = await page.content();
-      console.log('Page content length:', pageContent.length);
-
-      // Wait for table with extended timeout and logging
-      console.log('Waiting for table selector...');
+      // Wait for table with extended timeout
+      logger.info('Waiting for table selector...');
       await page.waitForSelector('table.table', { 
         timeout: 90000,
         state: 'visible'
       });
 
-      // Extract company data using a more robust method
+      // Extract company data
       const companies = await page.evaluate(() => {
         const rows = document.querySelectorAll('table.table tbody tr');
         return Array.from(rows).map((row, index) => {
@@ -82,16 +105,19 @@ async function scrapeCompanies() {
         });
       });
 
+      // Validate company data
+      const validatedCompanies = validateCompanyData(companies);
+
       // Ensure content directory exists
       const contentDir = path.join(process.cwd(), 'content');
       await fs.mkdir(contentDir, { recursive: true });
 
-      // Save to JSON for backup
+      // Save to JSON
       const jsonFilePath = path.join(contentDir, 'companies.json');
-      await fs.writeFile(jsonFilePath, JSON.stringify(companies, null, 2));
+      await fs.writeFile(jsonFilePath, JSON.stringify(validatedCompanies, null, 2));
 
       // Create Markdown content
-      const markdownContent = companies.map(company => 
+      const markdownContent = validatedCompanies.map(company => 
         `## ${company.name}
 - **Symbol**: ${company.symbol}
 - **Sector**: ${company.sector}
@@ -103,17 +129,18 @@ async function scrapeCompanies() {
       const mdFilePath = path.join(contentDir, 'companies.md');
       await fs.writeFile(mdFilePath, markdownContent);
 
-      console.log(`Successfully scraped ${companies.length} companies`);
-      console.log(`Data saved to ${jsonFilePath} and ${mdFilePath}`);
+      logger.info(`Successfully scraped ${validatedCompanies.length} companies`);
+      logger.info(`Data saved to ${jsonFilePath} and ${mdFilePath}`);
+
+      return validatedCompanies;
 
     } catch (navigationError) {
-      console.error('Navigation or scraping error:', navigationError);
-      
-      // Additional debugging: save error screenshot
-      await page.screenshot({ path: 'error-screenshot.png' });
+      logger.error('Navigation or scraping error:', navigationError);
+      throw navigationError;
     }
   } catch (error) {
-    console.error('Critical error in scraping process:', error);
+    logger.error('Critical error in scraping process:', error);
+    throw error;
   } finally {
     if (browser) {
       await browser.close();
@@ -121,4 +148,28 @@ async function scrapeCompanies() {
   }
 }
 
-scrapeCompanies();
+// Periodic scraping function
+async function scheduleScraping(interval = 24 * 60 * 60 * 1000) { // Default: 24 hours
+  try {
+    logger.info('Starting scheduled scraping...');
+    await scrapeCompanies();
+    
+    // Schedule next scrape
+    setTimeout(scheduleScraping, interval);
+  } catch (error) {
+    logger.error('Scheduled scraping failed:', error);
+    // Retry after a shorter interval in case of failure
+    setTimeout(scheduleScraping, 60 * 60 * 1000); // 1 hour
+  }
+}
+
+// Export functions for potential use in other scripts
+module.exports = {
+  scrapeCompanies,
+  scheduleScraping
+};
+
+// If run directly, start scheduled scraping
+if (require.main === module) {
+  scheduleScraping();
+}

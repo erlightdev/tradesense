@@ -1,0 +1,11 @@
+{"level":"info","message":"Navigating to the website...","timestamp":"2024-12-04T07:34:57.361Z"}
+{"level":"info","message":"Response status:","timestamp":"2024-12-04T07:35:24.659Z"}
+{"level":"info","message":"Waiting for table selector...","timestamp":"2024-12-04T07:35:24.659Z"}
+{"level":"info","message":"Successfully scraped 20 companies","timestamp":"2024-12-04T07:35:24.700Z"}
+{"level":"info","message":"Data saved to C:\\Users\\Prakash Nayak\\Desktop\\erlightdev\\tradesense\\content\\companies.json and C:\\Users\\Prakash Nayak\\Desktop\\erlightdev\\tradesense\\content\\companies.md","timestamp":"2024-12-04T07:35:24.701Z"}
+{"level":"info","message":"Starting scheduled scraping...","timestamp":"2024-12-04T07:36:34.833Z"}
+{"level":"info","message":"Navigating to the website...","timestamp":"2024-12-04T07:36:36.224Z"}
+{"level":"info","message":"Response status:","timestamp":"2024-12-04T07:36:39.507Z"}
+{"level":"info","message":"Waiting for table selector...","timestamp":"2024-12-04T07:36:39.508Z"}
+{"level":"info","message":"Successfully scraped 20 companies","timestamp":"2024-12-04T07:36:39.554Z"}
+{"level":"info","message":"Data saved to C:\\Users\\Prakash Nayak\\Desktop\\erlightdev\\tradesense\\content\\companies.json and C:\\Users\\Prakash Nayak\\Desktop\\erlightdev\\tradesense\\content\\companies.md","timestamp":"2024-12-04T07:36:39.555Z"}
