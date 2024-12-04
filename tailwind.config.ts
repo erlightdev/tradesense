@@ -31,28 +31,28 @@ const config: Config = {
           foreground: 'hsl(var(--popover-foreground))',
         },
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          DEFAULT: 'hsl(0, 0%, 9%)',       // Nearly black
+          foreground: 'hsl(0, 0%, 98%)',   // Almost white
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
+          DEFAULT: 'hsl(0, 0%, 96%)',      // Light gray
+          foreground: 'hsl(0, 0%, 20%)',   // Dark gray
         },
         muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
+          DEFAULT: 'hsl(0, 0%, 96%)',      // Light gray
+          foreground: 'hsl(0, 0%, 45%)',   // Medium gray
         },
         accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
+          DEFAULT: 'hsl(0, 0%, 96%)',      // Light gray
+          foreground: 'hsl(0, 0%, 9%)',    // Nearly black
         },
         destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
+          DEFAULT: 'hsl(0, 84%, 60%)',     // Soft red
+          foreground: 'hsl(0, 0%, 98%)',   // Almost white
         },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
+        ring: 'hsl(0, 0%, 80%)',           // Light border color
         chart: {
           '1': 'hsl(var(--chart-1))',
           '2': 'hsl(var(--chart-2))',
@@ -87,4 +87,5 @@ const config: Config = {
   },
   plugins: [require('tailwindcss-animate')],
 };
+
 export default config;
