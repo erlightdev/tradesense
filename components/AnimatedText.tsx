@@ -1,39 +1,45 @@
 "use client";
 
-import type React from 'react';
-import { motion, type MotionProps } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
+import type { ReactNode } from 'react';
+import type { MotionProps } from 'framer-motion';
+
+type AllowedComponents = 'div' | 'span' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
 interface AnimatedTextProps extends MotionProps {
-  children: React.ReactNode;
-  as?: keyof JSX.IntrinsicElements;
+  children: ReactNode;
+  as?: AllowedComponents;
   className?: string;
   staggered?: boolean;
 }
 
-export const AnimatedText: React.FC<AnimatedTextProps> = ({
+export const AnimatedText = ({
   children,
   as: Component = 'div',
   className = '',
   staggered = false,
   ...motionProps
-}) => {
-  // If not staggered, render as a single motion component
+}: AnimatedTextProps) => {
+  const defaultMotionProps = {
+    initial: { opacity: 0, y: -20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.6, ease: 'easeOut' },
+  };
+
   if (!staggered || typeof children !== 'string') {
+    const MotionComponent = motion[Component];
     return (
-      <motion.div 
-        as={Component}
+      <MotionComponent 
         className={className}
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
+        {...defaultMotionProps}
         {...motionProps}
       >
         {children}
-      </motion.div>
+      </MotionComponent>
     );
   }
 
-  // Staggered text animation
   return (
     <motion.div className={className}>
       {(children as string).split(' ').map((word, i) => (

@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-const DATA_FILE = path.join(process.cwd(), 'data', 'companies.json');
+const DATA_FILE = path.join(process.cwd(), 'content', 'companies', 'companies.json');
 
 export async function getCompanies(search?: string, page: number = 1, limit: number = 10) {
   try {
