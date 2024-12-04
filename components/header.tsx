@@ -22,10 +22,10 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden sm:flex items-center space-x-6 ml-6">
-          <Link href="/company" className="text-sm font-medium transition-colors hover:text-primary">
+          <Link href="/company" className="text-sm font-medium transition-colors hover:text-primary dark:hover:text-white dark:hover:opacity-80">
             Companies
           </Link>
-          <Link href="/market" className="text-sm font-medium transition-colors hover:text-primary">
+          <Link href="/market" className="text-sm font-medium transition-colors hover:text-primary dark:hover:text-white dark:hover:opacity-80">
             Market
           </Link>
         </nav>
