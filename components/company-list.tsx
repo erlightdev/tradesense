@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { useSearchParams } from "next/navigation"
 import {
   Table,
@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { CompanySearch } from "./company-search"
 import type { Company } from "@/lib/types/company"
+import companiesData from '@/content/companies.json'
 
 const ITEMS_PER_PAGE = 10
 
@@ -27,109 +28,96 @@ export function CompanyList() {
   const searchTerm = searchParams.get('search') || ''
 
   useEffect(() => {
-    async function fetchCompanies() {
+    function loadCompanies() {
       setIsLoading(true)
       try {
-        const params = new URLSearchParams({
-          page: currentPage.toString(),
-          limit: ITEMS_PER_PAGE.toString(),
-          ...(searchTerm && { search: searchTerm })
-        })
-        
-        const response = await fetch(`/api/companies?${params}`)
-        const data = await response.json()
-        
-        setCompanies(data.companies)
-        setTotalItems(data.total)
+        // Filter companies based on search term
+        const filteredCompanies = companiesData.filter(company => 
+          company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          company.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+        // Paginate companies
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        const paginatedCompanies = filteredCompanies.slice(
+          startIndex, 
+          startIndex + ITEMS_PER_PAGE
+        );
+
+        setCompanies(paginatedCompanies);
+        setTotalItems(filteredCompanies.length);
       } catch (error) {
-        console.error('Error fetching companies:', error)
+        console.error('Error loading companies:', error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     }
 
-    fetchCompanies()
-  }, [currentPage, searchTerm])
+    loadCompanies();
+  }, [currentPage, searchTerm]);
 
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE)
+  // Calculate pagination
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
   return (
-    <div className="space-y-4">
+    <div className="w-full">
       <CompanySearch />
       
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Symbol</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Sector</TableHead>
-              <TableHead>Last Traded Price</TableHead>
-              <TableHead>Change %</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
+      {isLoading ? (
+        <div className="text-center py-4">Loading companies...</div>
+      ) : (
+        <>
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8">
-                  Loading...
-                </TableCell>
+                <TableHead>Symbol</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Sector</TableHead>
+                <TableHead>Last Traded Price</TableHead>
+                <TableHead>Percent Change</TableHead>
               </TableRow>
-            ) : companies.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center py-8">
-                  No companies found
-                </TableCell>
-              </TableRow>
-            ) : (
-              companies.map((company) => (
+            </TableHeader>
+            <TableBody>
+              {companies.map((company) => (
                 <TableRow key={company.id}>
-                  <TableCell className="font-medium">{company.symbol}</TableCell>
+                  <TableCell>{company.symbol}</TableCell>
                   <TableCell>{company.name}</TableCell>
                   <TableCell>{company.sector}</TableCell>
                   <TableCell>{company.lastTradedPrice}</TableCell>
                   <TableCell>{company.percentChange}</TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              ))}
+            </TableBody>
+          </Table>
 
-      <div className="flex items-center justify-between px-2">
-        <div className="text-sm text-muted-foreground">
-          Showing {companies.length} of {totalItems} companies
-        </div>
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => {
-              const params = new URLSearchParams(searchParams)
-              params.set('page', (currentPage - 1).toString())
-              window.history.pushState(null, '', `?${params.toString()}`)
-            }}
-            disabled={currentPage === 1 || isLoading}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <span className="text-sm">
-            Page {currentPage} of {totalPages}
-          </span>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => {
-              const params = new URLSearchParams(searchParams)
-              params.set('page', (currentPage + 1).toString())
-              window.history.pushState(null, '', `?${params.toString()}`)
-            }}
-            disabled={currentPage === totalPages || isLoading}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+          {/* Pagination Controls */}
+          <div className="flex justify-between items-center mt-4">
+            <Button 
+              variant="outline" 
+              disabled={currentPage === 1}
+              onClick={() => window.history.pushState(
+                null, 
+                '', 
+                `?page=${currentPage - 1}${searchTerm ? `&search=${searchTerm}` : ''}`
+              )}
+            >
+              <ChevronLeft className="mr-2" /> Previous
+            </Button>
+            <span>Page {currentPage} of {totalPages}</span>
+            <Button 
+              variant="outline" 
+              disabled={currentPage === totalPages}
+              onClick={() => window.history.pushState(
+                null, 
+                '', 
+                `?page=${currentPage + 1}${searchTerm ? `&search=${searchTerm}` : ''}`
+              )}
+            >
+              Next <ChevronRight className="ml-2" />
+            </Button>
+          </div>
+        </>
+      )}
     </div>
-  )
+  );
 }
