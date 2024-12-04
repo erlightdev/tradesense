@@ -1,10 +1,18 @@
+// Company type reflecting the new JSON structure
 export interface Company {
-  id: string;
+  serialNumber: number;
   symbol: string;
   name: string;
+  status: string;
   sector: string;
-  lastTradedPrice?: string;
-  percentChange?: string;
+  lastUpdated: string;
+}
+
+// Optional metadata about the entire dataset
+export interface CompanyDataset {
+  lastUpdated: string;
+  totalCompanies: number;
+  companies: Company[];
 }
 
 export interface CompanyListResponse {

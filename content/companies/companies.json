@@ -1,0 +1,166 @@
+{
+  "timestamp": "2024-12-04T10:50:33.370Z",
+  "total": 20,
+  "companies": [
+    {
+      "serialNumber": 1,
+      "symbol": "NABIL",
+      "name": "Nabil Bank Limited",
+      "status": "Active",
+      "sector": "1",
+      "lastUpdated": "2024-12-04T10:50:33.367Z"
+    },
+    {
+      "serialNumber": 2,
+      "symbol": "NIMB",
+      "name": "Nepal Investment Mega Bank Limited",
+      "status": "Active",
+      "sector": "2",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    },
+    {
+      "serialNumber": 3,
+      "symbol": "SCB",
+      "name": "Standard Chartered Bank Limited",
+      "status": "Active",
+      "sector": "3",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    },
+    {
+      "serialNumber": 4,
+      "symbol": "HBL",
+      "name": "Himalayan Bank Limited",
+      "status": "Active",
+      "sector": "4",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    },
+    {
+      "serialNumber": 5,
+      "symbol": "SBI",
+      "name": "Nepal SBI Bank Limited",
+      "status": "Active",
+      "sector": "5",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    },
+    {
+      "serialNumber": 6,
+      "symbol": "EBL",
+      "name": "Everest Bank Limited",
+      "status": "Active",
+      "sector": "6",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    },
+    {
+      "serialNumber": 7,
+      "symbol": "NICA",
+      "name": "NIC Asia Bank Ltd.",
+      "status": "Active",
+      "sector": "7",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    },
+    {
+      "serialNumber": 8,
+      "symbol": "MBL",
+      "name": "Machhapuchhre Bank Limited",
+      "status": "Active",
+      "sector": "8",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    },
+    {
+      "serialNumber": 9,
+      "symbol": "LSL",
+      "name": "Laxmi Sunrise Bank Limited",
+      "status": "Active",
+      "sector": "9",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    },
+    {
+      "serialNumber": 10,
+      "symbol": "KBL",
+      "name": "Kumari Bank Limited",
+      "status": "Active",
+      "sector": "10",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    },
+    {
+      "serialNumber": 11,
+      "symbol": "SBL",
+      "name": "Siddhartha Bank Limited",
+      "status": "Active",
+      "sector": "11",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    },
+    {
+      "serialNumber": 12,
+      "symbol": "SHL",
+      "name": "Soaltee Hotel Limited",
+      "status": "Active",
+      "sector": "12",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    },
+    {
+      "serialNumber": 13,
+      "symbol": "TRH",
+      "name": "Taragaon Regency Hotel Limited",
+      "status": "Active",
+      "sector": "13",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    },
+    {
+      "serialNumber": 14,
+      "symbol": "OHL",
+      "name": "Oriental Hotels Limited",
+      "status": "Active",
+      "sector": "14",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    },
+    {
+      "serialNumber": 15,
+      "symbol": "NHPC",
+      "name": "National Hydro Power Company Limited",
+      "status": "Active",
+      "sector": "15",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    },
+    {
+      "serialNumber": 16,
+      "symbol": "BPCL",
+      "name": "Butwal Power Company Limited",
+      "status": "Active",
+      "sector": "16",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    },
+    {
+      "serialNumber": 17,
+      "symbol": "CHCL",
+      "name": "Chilime Hydropower Company Limited",
+      "status": "Active",
+      "sector": "17",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    },
+    {
+      "serialNumber": 18,
+      "symbol": "STC",
+      "name": "Salt Trading Corporation",
+      "status": "Active",
+      "sector": "18",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    },
+    {
+      "serialNumber": 19,
+      "symbol": "BBC",
+      "name": "Bishal Bazar Company Limited",
+      "status": "Active",
+      "sector": "19",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    },
+    {
+      "serialNumber": 20,
+      "symbol": "NUBL",
+      "name": "Nirdhan Utthan Laghubitta Bittiya Sanstha Limited",
+      "status": "Active",
+      "sector": "20",
+      "lastUpdated": "2024-12-04T10:50:33.368Z"
+    }
+  ]
+}

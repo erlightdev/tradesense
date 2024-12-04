@@ -13,10 +13,19 @@ import {
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { CompanySearch } from "./company-search"
-import type { Company } from "@/lib/types/company"
-import companiesData from '@/content/companies.json'
+import companiesData from '@/content/companies/companies.json'
 
 const ITEMS_PER_PAGE = 10
+
+// Updated type to match new JSON structure
+interface Company {
+  serialNumber: number;
+  symbol: string;
+  name: string;
+  status: string;
+  sector: string;
+  lastUpdated: string;
+}
 
 export function CompanyList() {
   const searchParams = useSearchParams()
@@ -31,8 +40,11 @@ export function CompanyList() {
     function loadCompanies() {
       setIsLoading(true)
       try {
+        // Use the new JSON structure
+        const allCompanies = companiesData.companies || [];
+
         // Filter companies based on search term
-        const filteredCompanies = companiesData.filter(company => 
+        const filteredCompanies = allCompanies.filter(company => 
           company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           company.symbol.toLowerCase().includes(searchTerm.toLowerCase())
         );
@@ -70,21 +82,23 @@ export function CompanyList() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>S.N.</TableHead>
                 <TableHead>Symbol</TableHead>
                 <TableHead>Name</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead>Sector</TableHead>
-                <TableHead>Last Traded Price</TableHead>
-                <TableHead>Percent Change</TableHead>
+                <TableHead>Last Updated</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {companies.map((company) => (
-                <TableRow key={company.id}>
+                <TableRow key={`${company.symbol}-${company.serialNumber}`}>
+                  <TableCell>{company.serialNumber}</TableCell>
                   <TableCell>{company.symbol}</TableCell>
                   <TableCell>{company.name}</TableCell>
+                  <TableCell>{company.status}</TableCell>
                   <TableCell>{company.sector}</TableCell>
-                  <TableCell>{company.lastTradedPrice}</TableCell>
-                  <TableCell>{company.percentChange}</TableCell>
+                  <TableCell>{new Date(company.lastUpdated).toLocaleString()}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -103,10 +117,12 @@ export function CompanyList() {
             >
               <ChevronLeft className="mr-2" /> Previous
             </Button>
+
             <span>Page {currentPage} of {totalPages}</span>
+
             <Button 
               variant="outline" 
-              disabled={currentPage === totalPages}
+              disabled={currentPage >= totalPages}
               onClick={() => window.history.pushState(
                 null, 
                 '', 
@@ -119,5 +135,5 @@ export function CompanyList() {
         </>
       )}
     </div>
-  );
+  )
 }
